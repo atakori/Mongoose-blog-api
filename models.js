@@ -17,7 +17,7 @@ blogSchema.virtual('fullNameString').get(function() {
 blogSchema.methods.apiRepr = function() {
 
 	return {
-		id: this._id
+		id: this._id,
 		title: this.title,
 		content: this.content,
 		author: this.fullNameString,
@@ -26,3 +26,5 @@ blogSchema.methods.apiRepr = function() {
 }
 
 const blogPost = mongoose.model('blogPost', blogSchema);
+
+module.exports = {blogPost};
