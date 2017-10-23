@@ -68,6 +68,27 @@ app.post('/blogPosts', (req,res) => {
 	})
 });
 
+app.put('/blogPosts/:id', (req,res) => {
+	if(req.body.id !== req.params.id) {
+		const message = (`Request path id (${req.params.id}) does
+			not match the request body id (${req.body.id})`);
+		console.log(message);
+		return res.status(400).json({message: message});
+	}
+
+	const toUpdate = {};
+	const updatableFields = ['title', 'content', 'author'];
+
+	updatableFields.forEach(field => {
+		if (field in req.body) {
+			toUpdate[field] = req.body[field];
+		}
+	});
+	blogPost.findByIdAndUpdate( req.params.id, {$set: toUpdate})
+	.then(blogPost => res.status(200).end())
+	.catch(err => res.status(500).json({message: 'Internal server error'}));
+});
+
 let server;
 
 // this function connects to our database, then starts the server
