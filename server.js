@@ -36,11 +36,37 @@ app.get('/blogPosts/:id', (req,res) => {
 			res.json(blogPost.apiRepr());
 		})
 		.catch(err => {
-			console.log(err);
+			console.error(err);
 			res.status(500).json({error: 'Something went wrong'});
 		})
 })
 
+app.post('/blogPosts', (req,res) => {
+	const requiredFields = ['title', 'content', 'author'];
+	for (let i=0; i<requiredFields.length; i++) {
+		const field = requiredFields[i];
+		if (!(field in req.body)) {
+			const message = `Missing \"${field}\" in request body`;
+			console.error(message);
+			res.status(400).send(message);
+		}
+	}
+
+	blogPost.create({
+		title: req.body.title,
+		content: req.body.content,
+		author: {
+			firstName: req.body.author.firstName, 
+			lastName: req.body.author.lastName
+	},
+		created: req.body.created
+		})
+	.then(blogPost => res.status(201).json(blogPost.apiRepr()))
+	.catch(err => {
+		console.error(err);
+		res.status(500).json({message: 'Internal service error'})
+	})
+});
 
 let server;
 
