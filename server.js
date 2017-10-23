@@ -22,7 +22,23 @@ app.get('/blogPosts', (req, res) => {
         blogPosts: blogPosts.map( 
 				blogPost => blogPost.apiRepr())
 		});
-	});
+	})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({message: 'Internal server error'});
+		});
+});
+
+app.get('/blogPosts/:id', (req,res) => {
+	blogPost.
+	findById(req.params.id)
+		.then(blogPost => {
+			res.json(blogPost.apiRepr());
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({error: 'Something went wrong'});
+		})
 })
 
 
