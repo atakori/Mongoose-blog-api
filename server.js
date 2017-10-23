@@ -17,13 +17,13 @@ app.get('/blogPosts', (req, res) => {
 	blogPost.
 		find()
 		.then(blogPosts => {
+			console.log(blogPosts);
 			res.json({
         blogPosts: blogPosts.map( 
 				blogPost => blogPost.apiRepr())
 		});
 	});
 })
-
 
 
 let server;
@@ -33,6 +33,11 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
 
   return new Promise((resolve, reject) => {
     mongoose.connect(databaseUrl, err => {
+    	console.log('i was here');
+    	mongoose.connection.db.listCollections(function (err, names) {
+        console.log(names); // [{ name: 'dbname.myCollection' }]
+        console.log(err);
+    });
       if (err) {
         return reject(err);
       }
@@ -48,9 +53,6 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
     });
   });
 }
-
-
-
 
 
 // this function closes the server, and returns a promise. we'll
